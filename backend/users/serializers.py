@@ -21,8 +21,11 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
-        """Create an instance of user"""
-        return CustomUser.objects.create_user(**validated_data)
+        """Create an instance of user and deactivate it until user verify their email"""
+        user = CustomUser.objects.create_user(**validated_data)
+        user.is_active = False
+        user.save()
+        return user
 
     def validate_email(self, data):
         """Ensure unique GMU email address"""
