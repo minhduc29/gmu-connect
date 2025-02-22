@@ -1,11 +1,11 @@
-from django.core.mail import send_mail
-from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.tokens import default_token_generator as token_generator
+from django.contrib.auth.models import User
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import send_mail
 from rest_framework import permissions, status
 from rest_framework.generics import CreateAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import CustomUser
 from .serializers import UserSerializer
 
 
@@ -39,8 +39,8 @@ class VerifyEmailView(APIView):
         """Verify and activate user account"""
         # Get the user
         try:
-            user = CustomUser.objects.get(username=username)
-        except CustomUser.DoesNotExist:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
             return Response({"error": "Error occurred. Please try again."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Validate the token
