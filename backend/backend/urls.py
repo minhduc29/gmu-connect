@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from profiles.views import ProfileView, TagListView
 from users.views import RegisterView, EmailVerificationView
 
 urlpatterns = [
@@ -26,4 +27,6 @@ urlpatterns = [
     path('api/auth/register/', RegisterView.as_view(), name="register"),
     path('api/auth/verify/', EmailVerificationView.as_view(), name="send_verification"),
     path('api/auth/verify/<str:username>/<str:token>/', EmailVerificationView.as_view(), name="verify_email"),
+    path('api/profiles/<str:username>/', ProfileView.as_view(), name="profile"),
+    path('api/tags/', TagListView.as_view(), name="tags"),
 ]
