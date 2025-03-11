@@ -15,10 +15,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from profiles.views import ProfileView, TagListView
 from users.views import RegisterView, EmailVerificationView
+from posts.views import PostViewSet
+
+# Create a router for PostViewSet
+router = DefaultRouter()
+# Register the username-based lookup first (more specific pattern)
+router.register(r'posts/by/(?P<username>[^/.]+)', PostViewSet, basename='user-posts')
+# Then register the default routes (including pk-based lookup)
+router.register(r'posts', PostViewSet, basename='post')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,4 +38,5 @@ urlpatterns = [
     path('api/auth/verify/<str:username>/<str:token>/', EmailVerificationView.as_view(), name="verify_email"),
     path('api/profiles/<str:username>/', ProfileView.as_view(), name="profile"),
     path('api/tags/', TagListView.as_view(), name="tags"),
+    path('api/', include(router.urls)),
 ]
