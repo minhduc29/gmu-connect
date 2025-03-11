@@ -11,33 +11,20 @@ class TagSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
     email = serializers.EmailField(source='user.email', read_only=True)
-    interests = TagSerializer(many=True, required=False)
+    interests = serializers.SlugRelatedField(
+        many=True,
+        queryset=Tag.objects.all(),
+        slug_field='slug',
+        required=False
+    )
 
     class Meta:
         model = Profile
         fields = ['username', 'email', 'bio', 'major', 'graduation_year', 'interests', 'linkedin', 'created_at']
         read_only_fields = ['created_at']
 
-    def update(self, instance, validated_data):
-        interests_data = validated_data.pop('interests', None)
-        
-        # Update all other fields
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-        
-        # Update interests if provided
-        if interests_data is not None:
-            interests = []
-            for interest_data in interests_data:
-                try:
-                    # Only use existing tags, don't create new ones
-                    tag = Tag.objects.get(name=interest_data['name'])
-                    interests.append(tag)
-                except Tag.DoesNotExist:
-                    raise serializers.ValidationError(
-                        f"Tag '{interest_data['name']}' does not exist. Please select from available tags."
-                    )
-            instance.interests.set(interests)
-        
-        instance.save()
-        return instance
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        # Convert interests from list of slugs to list of full tag data
+        rep['interests'] = TagSerializer(instance.interests.all(), many=True).data
+        return rep

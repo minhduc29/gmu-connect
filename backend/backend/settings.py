@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     # Main apps
     'users',
     'profiles',
+    'posts',
 ]
 
 AUTH_USER_MODEL = 'auth.User'

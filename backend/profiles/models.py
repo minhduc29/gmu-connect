@@ -18,9 +18,6 @@ class Tag(models.Model):
     def __str__(self):
         return self.slug
 
-    class Meta:
-        ordering = ['name']  # Tags will be ordered alphabetically by name
-
 
 class Profile(models.Model):
     """Extended profile model for additional user information"""

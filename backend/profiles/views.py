@@ -4,13 +4,14 @@ from .serializers import ProfileSerializer, TagSerializer
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
-    """Custom permission to only allow owners of a profile to edit it"""
+    """Custom permission to only allow owners to edit it"""
     def has_object_permission(self, request, view, obj):
         # Read permissions are allowed to any authenticated request
         if request.method in permissions.SAFE_METHODS:
             return True
-        # Write permissions are only allowed to the owner of the profile
-        return obj.user == request.user
+        # Check for either user or author attribute
+        return (hasattr(obj, 'user') and obj.user == request.user) or \
+               (hasattr(obj, 'author') and obj.author == request.user)
 
 
 class ProfileView(generics.RetrieveUpdateAPIView):
