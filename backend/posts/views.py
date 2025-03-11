@@ -10,7 +10,7 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['title', 'content', 'author__username', 'interest_tags__name']
+    search_fields = ['title', 'content', 'author__username', 'interest_tags__name', 'interest_tags__slug']
     ordering_fields = ['created_at', 'updated_at', 'title', 'author__username']
     ordering = ['-created_at']
 
