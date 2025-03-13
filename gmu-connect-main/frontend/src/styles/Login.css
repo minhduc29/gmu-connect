@@ -1,0 +1,114 @@
+/* Container: Two columns, full viewport height */
+.login-container {
+    display: flex;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* LEFT COLUMN */
+  .login-left {
+    flex: 1;
+    background-color: #ECB23A; /* Light gray or #fff */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Login Card */
+  .login-card {
+    background-color: #FFCC33;
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+    max-width: 350px;
+    width: 100%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .gmu-logo {
+    width: 100px;
+    margin-bottom: 1rem;
+  }
+  
+  .login-button {
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    background-color: #008000;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  /* RIGHT COLUMN: Green background behind the slides */
+  .login-right {
+    flex: 1;
+    background-color: #006633;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Slides container: everything (image, text, dots) is stacked vertically */
+  .slides-container {
+    width: 80%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column; /* so image, text, dots are top-to-bottom */
+    align-items: center;
+    position: relative;     /* only needed if you do absolute positioning */
+    padding: 1rem;
+  }
+  
+  /* Slide image */
+  .slide-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    display: block;
+  }
+  
+  /* Text below the image */
+  .slide-text {
+    margin-top: 1rem;
+    background-color: #FFCC33; /* White background behind text */
+    color: #333;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  }
+  
+  .slide-text h2 {
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Dots container: center the dots below the text */
+  .dots-container {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  /* Each dot */
+  .dot {
+    width: 12px;
+    height: 12px;
+    border: 2px solid #dfe743;
+    border-radius: 50%;
+    cursor: pointer;
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Active dot: solid white */
+  .dot.active {
+    background-color: #dce535;
+  }
+  
