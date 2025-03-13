@@ -1,0 +1,30 @@
+/* Logout.css */
+.logout-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #ECB23A;
+  }
+  
+  .logout-container h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .logout-container p {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .logout-button {
+    background-color: #008000; /* GMU Green */
+    color: #f7f7f7;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
