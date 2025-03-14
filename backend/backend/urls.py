@@ -18,25 +18,30 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from chat.views import RoomListCreateView, RoomView, LeaveRoomView, MessageListCreateView
 from profiles.views import ProfileView, TagListView
 from users.views import RegisterView, EmailVerificationView
 from posts.views import PostViewSet
 
-# Create a router for PostViewSet
+
 router = DefaultRouter()
 # Register the username-based lookup first (more specific pattern)
 router.register(r'posts/by/(?P<username>[^/.]+)', PostViewSet, basename='user-posts')
-# Then register the default routes (including pk-based lookup)
-router.register(r'posts', PostViewSet, basename='post')
+# Default routes for posts (including pk-based lookup)
+router.register(r'posts', PostViewSet, basename='posts')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/token/', TokenObtainPairView.as_view(), name="get_token"),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name="refresh_token"),
+    path('api/token/', TokenObtainPairView.as_view(), name="get-token"),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name="refresh-token"),
     path('api/auth/register/', RegisterView.as_view(), name="register"),
-    path('api/auth/verify/', EmailVerificationView.as_view(), name="send_verification"),
-    path('api/auth/verify/<str:username>/<str:token>/', EmailVerificationView.as_view(), name="verify_email"),
+    path('api/auth/verify/', EmailVerificationView.as_view(), name="send-verification"),
+    path('api/auth/verify/<str:username>/<str:token>/', EmailVerificationView.as_view(), name="verify-email"),
     path('api/profiles/<str:username>/', ProfileView.as_view(), name="profile"),
     path('api/tags/', TagListView.as_view(), name="tags"),
-    path('api/', include(router.urls)),
+    path('api/', include(router.urls)), # Posts
+    path('api/rooms/', RoomListCreateView.as_view(), name='rooms'),
+    path('api/rooms/<int:pk>/', RoomView.as_view(), name='room'),
+    path('api/rooms/<int:pk>/leave/', LeaveRoomView.as_view(), name='leave-room'),
+    path('api/rooms/<int:pk>/messages/', MessageListCreateView.as_view(), name='messages'),
 ]
