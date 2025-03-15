@@ -64,6 +64,8 @@ INSTALLED_APPS = [
     'users',
     'profiles',
     'posts',
+    'chat',
+    'channels',
 ]
 
 AUTH_USER_MODEL = 'auth.User'
@@ -109,7 +111,7 @@ DATABASES = {
         'NAME': os.getenv("DB_NAME"),
         'USER': os.getenv("DB_USER"),
         'PASSWORD': os.getenv("DB_PASSWORD"),
-        'HOST': os.getenv("DB_HOST"),
+        'HOST': os.getenv("DB_HOST", "db"),
         'PORT': os.getenv("DB_PORT"),
     }
 }
@@ -164,3 +166,26 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'services.gmuconnect@gmail.com'
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")
 EMAIL_PORT = 587
+
+# Add Channels configuration
+ASGI_APPLICATION = 'backend.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [(os.getenv('REDIS_HOST', 'redis'), 6379)],
+        },
+    },
+}
+
+# Redis cache configuration
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': f"redis://{os.getenv('REDIS_HOST', 'redis')}:6379/1",
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
