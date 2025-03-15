@@ -127,6 +127,8 @@ class LeaveRoomView(generics.DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         """Allow a non-admin user to leave a room"""
         room_member = self.get_object()
+        if not room_member.room.is_group:
+            return Response({"message": "Direct messages do not support leaving."}, status=status.HTTP_400_BAD_REQUEST)
         if room_member.room.admin == request.user:
             return Response({"message": "Admin cannot leave the room."}, status=status.HTTP_400_BAD_REQUEST)
         room_member.delete()
