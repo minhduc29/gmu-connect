@@ -98,6 +98,9 @@ class RoomSerializer(serializers.ModelSerializer):
         
         # Convert back to list and update data
         data['member_usernames'] = list(member_usernames)
+
+        # Get default for is_group
+        data['is_group'] = data.get('is_group', False)
         
         # For group chats, check minimum members requirement
         if data['is_group'] and len(data['member_usernames']) < 3:
@@ -142,4 +145,4 @@ class RoomSerializer(serializers.ModelSerializer):
         """Check if there are any unread messages"""
         user_last_read = getattr(obj, 'user_last_read', None)
         latest_message_time = getattr(obj, 'latest_message_time', None)
-        return latest_message_time > user_last_read if user_last_read and latest_message_time else False
+        return latest_message_time > user_last_read if user_last_read and latest_message_time else True
