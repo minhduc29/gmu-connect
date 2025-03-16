@@ -6,6 +6,8 @@ from rest_framework import generics, views, status
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
+from users.serializers import UserSerializer
+from .consumers import ChatConsumer
 from .models import Room, RoomMember, Message
 from .serializers import RoomSerializer, MessageSerializer
 
@@ -25,6 +27,22 @@ class RoomListCreateView(generics.ListCreateAPIView):
             latest_message_time=Max('messages__timestamp'),
             user_last_read=Max('members__last_read_timestamp', filter=Q(members__user=self.request.user))
         ).order_by('-latest_message_time')
+
+    def perform_create(self, serializer):
+        """Create a new room and notify all members"""
+        room = serializer.save()
+
+        # Notify all members about the new room
+        for member in room.members.all():
+            ChatConsumer.notify(
+                group_id=member.user.id,
+                event_type='added_to_room',
+                event_data={
+                    'room_id': room.id,
+                    'data': serializer.data
+                },
+                is_room=False
+            )
 
 
 class RoomView(views.APIView):
@@ -63,10 +81,19 @@ class RoomView(views.APIView):
         valid, msg = self.is_admin(room)
         if not valid:
             return Response({"message": msg}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         serializer = RoomSerializer(room, data=request.data, context={'is_update': True}, partial=True)
         if serializer.is_valid():
             serializer.save()
+
+            # Notify all members of the room
+            ChatConsumer.notify(
+                group_id=pk,
+                event_type='room_update',
+                event_data={'data': serializer.data},
+                is_room=True
+            )
+
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -78,7 +105,7 @@ class RoomView(views.APIView):
             return Response({"message": msg}, status=status.HTTP_400_BAD_REQUEST)
 
         action = request.data.get('action')
-        usernames = request.data.get('usernames', [])
+        usernames = list(set(request.data.get('usernames', [])))
         
         if not action or not usernames:
             return Response({"message": "Both 'action' and 'usernames' fields are required"},
@@ -90,7 +117,7 @@ class RoomView(views.APIView):
 
         # Check that all specified users exist
         users = []
-        for username in set(usernames):
+        for username in usernames:
             if username == room.admin.username:
                 continue
             try:
@@ -109,10 +136,37 @@ class RoomView(views.APIView):
             if action == 'add':
                 RoomMember.objects.get_or_create(room=room, user=user)
             else:
-                # Note: WebSocket should handle notifying removed users
                 RoomMember.objects.filter(room=room, user=user).delete()
-        
+
         serializer = RoomSerializer(room)
+
+        # Notify all room members about the change
+        ChatConsumer.notify(
+            group_id=pk,
+            event_type='member_added' if action == 'add' else 'member_removed',
+            event_data={"data": usernames},
+            is_room=True
+        )
+
+        # Notify all added/removed users
+        if action == "add":
+            event_type = "added_to_room"
+            data = serializer.data
+        else:
+            event_type = "removed_from_room"
+            data = pk
+
+        for user in users:
+            ChatConsumer.notify(
+                group_id=user.id,
+                event_type=event_type,
+                event_data={
+                    'room_id': pk,
+                    'data': data
+                },
+                is_room=False
+            )
+
         return Response(serializer.data)
 
 
@@ -131,8 +185,37 @@ class LeaveRoomView(generics.DestroyAPIView):
             return Response({"message": "Direct messages do not support leaving."}, status=status.HTTP_400_BAD_REQUEST)
         if room_member.room.admin == request.user:
             return Response({"message": "Admin cannot leave the room."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Get room ID and user data before deleting the membership
+        room = room_member.room
+
+        # Delete the membership
         room_member.delete()
-        return Response({"message": "Successfully left the room."})
+
+        # Notify all room members about the user leaving
+        ChatConsumer.notify(
+            group_id=room.id,
+            event_type='member_removed',
+            event_data={
+                'data': [request.user.username],
+                'left': True
+            },
+            is_room=True
+        )
+
+        # Notify the user who left and disconnect them
+        ChatConsumer.notify(
+            group_id=request.user.id,
+            event_type="removed_from_room",
+            event_data={
+                'room_id': room.id,
+                'data': room.id,
+                'left': True
+            },
+            is_room=False
+        )
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class MessagePagination(PageNumberPagination):
@@ -163,7 +246,7 @@ class MessageListCreateView(generics.ListCreateAPIView):
         room_id = self.kwargs.get('pk')
 
         # Create message
-        message = serializer.save(room_id=room_id, sender=self.request.user)
+        serializer.save(room_id=room_id, sender=self.request.user)
 
         # Mark messages as read for sender since they just sent a message
         RoomMember.objects.filter(room_id=room_id, user=self.request.user).update(last_read_timestamp=timezone.now())
