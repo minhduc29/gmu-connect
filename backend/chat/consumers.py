@@ -73,7 +73,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if room_id:
             if message_type == 'message':
                 # Handle new chat message
-                message_content = text_data_json.get('message')
+                message_content = text_data_json.get('content')
                 if message_content:
                     # Check if user is a member of the room
                     is_member = await self.is_room_member(room_id)
@@ -95,7 +95,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                             'room_id': room_id,
                             'content': message_content,
                             'sender': sender_data,
-                            'message_id': db_message.id,
                             'timestamp': db_message.timestamp.isoformat(),
                         }
                     )
@@ -129,7 +128,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'room_id': event['room_id'],
             'content': event['content'],
             'sender': event['sender'],
-            'message_id': event['message_id'],
             'timestamp': event['timestamp']
         }))
     
@@ -173,6 +171,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         """Send notification when a new member is added to a room"""
         await self.send(text_data=json.dumps({
             'type': 'member_added',
+            'room_id': event['room_id'],
             'data': event['data'] # List of usernames added
         }))
     
@@ -180,6 +179,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         """Send notification when a member is removed from a room"""
         await self.send(text_data=json.dumps({
             'type': 'member_removed',
+            'room_id': event['room_id'],
             'data': event['data'], # List of usernames removed
             'left': event.get('left', False) # For distinguishing between leaving and being kicked
         }))

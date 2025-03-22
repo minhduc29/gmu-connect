@@ -144,7 +144,10 @@ class RoomView(views.APIView):
         ChatConsumer.notify(
             group_id=pk,
             event_type='member_added' if action == 'add' else 'member_removed',
-            event_data={"data": usernames},
+            event_data={
+                "room_id": pk,
+                "data": usernames
+            },
             is_room=True
         )
 
@@ -197,6 +200,7 @@ class LeaveRoomView(generics.DestroyAPIView):
             group_id=room.id,
             event_type='member_removed',
             event_data={
+                'room_id': room.id,
                 'data': [request.user.username],
                 'left': True
             },
