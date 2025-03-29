@@ -1,20 +1,21 @@
 import { useState, useEffect } from "react"
-import api from "../api"
-import { useSearchParams } from "react-router-dom";
+import "../styles/Form.css"
+import { useNavigate } from "react-router-dom";
 
 function Home() {
-    const [notes, setNotes] = useState([]);
-    const [content, setContent] = useState("")
-    const [title, setTitle] = useState("")
+    const [profile, setProfile] = useState(null);
+    const navigate = useNavigate();
 
-    useEffect(() => {
-        getNotes();
-    }, [])
-
-    const getNotes = () => {
-        api.get("/api/notes/").then((res) => res.data).then((data) => setNotes(data)).catch().catch((err) => alert(err));
+    function handleProfileClick(){
+        navigate("/Profile")
     }
-    return <div>Home</div>
+    return( 
+        <div>Welcome to GMU connect!
+            <form onClick={handleProfileClick} className="form-profile">
+                <button type = "button">Profile page</button>
+            </form>
+        </div>
+    );
 }
 
 export default Home
