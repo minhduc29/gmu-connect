@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react"
-import "../styles/Form.css"
 import { useNavigate } from "react-router-dom";
 
 function Home() {
@@ -12,7 +11,7 @@ function Home() {
     return( 
         <div>Welcome to GMU connect!
             <form onClick={handleProfileClick} className="form-profile">
-                <button type = "button">Profile page</button>
+                <button type="button">Profile page</button>
             </form>
         </div>
     );
