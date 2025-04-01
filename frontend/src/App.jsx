@@ -1,41 +1,21 @@
-import React from "react"
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
-import Login from "./pages/Login"
-import Register from "./pages/Register"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import "./styles/form.css"
+import ProtectedRoute from "./components/ProtectedRoute"
 import Home from "./pages/Home"
 import NotFound from "./pages/NotFound"
 import Profile from "./pages/Profile"
-import ProtectedRoute from "./components/ProtectedRoute"
-
-function Logout(){
-  localStorage.clear()
-  return <Navigate to="/Login" />
-}
-
-function RegisterAndLogout() {
-  localStorage.clear()
-  return <Register />
-}
-
+import AuthRoutes from "./routes/AuthRoutes"
 
 function App() {
-
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/login" element={<Login />} />
-        <Route path="/logout" element={<Logout />} />
-        <Route path="/register" element={<RegisterAndLogout />} />
-        <Route path="/profiles/:author" element={<Profile />} />
-        <Route path="*" element={<NotFound />} ></Route>
+        {AuthRoutes.map(route => (
+          <Route key={route.path} path={route.path} element={route.element} />
+        ))}
+        <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        <Route path="/profiles/:username" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   )
