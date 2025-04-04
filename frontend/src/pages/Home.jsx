@@ -1,16 +1,11 @@
-import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 
 function Home() {
-    const [profile, setProfile] = useState(null);
-    const navigate = useNavigate();
-
-    function handleProfileClick(){
-        navigate("/Profile")
-    }
+    const navigate = useNavigate()
+    
     return( 
         <div>Welcome to GMU connect!
-            <form onClick={handleProfileClick} className="form-profile">
+            <form onClick={() => navigate(`/profiles/${localStorage.getItem("username")}`)} className="form-profile">
                 <button type="button">Profile page</button>
             </form>
         </div>
