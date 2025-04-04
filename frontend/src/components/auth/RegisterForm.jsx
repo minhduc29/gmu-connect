@@ -1,9 +1,8 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { validateEmail, validatePassword, validateConfirmPassword } from "../../utils/validation"
-import useAuth from "../../hooks/useAuth"
+import { AuthContext } from "../../context/AuthContext"
 
 function RegisterForm() {
-    const { register, error: authError, loading } = useAuth()
     const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -12,6 +11,7 @@ function RegisterForm() {
     const [passwordError, setPasswordError] = useState("")
     const [confirmPasswordError, setConfirmPasswordError] = useState("")
     const [isRegistered, setIsRegistered] = useState(false)
+    const { loading, error, register } = useContext(AuthContext)
 
     const handleEmailBlur = () => {
         setEmailError(validateEmail(email))
@@ -43,7 +43,7 @@ function RegisterForm() {
 
         if (success) {
             setIsRegistered(true)
-            
+
             // Reset form
             setUsername("")
             setEmail("")
@@ -111,7 +111,7 @@ function RegisterForm() {
                 {loading ? "Registering..." : "Register"}
             </button>
 
-            {authError && <p style={{ color: "red" }}>{authError}</p>}
+            {error && <p style={{ color: "red" }}>{error}</p>}
         </form>
     )
 }

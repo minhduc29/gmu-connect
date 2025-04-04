@@ -1,12 +1,12 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import useAuth from "../../hooks/useAuth"
+import { AuthContext } from "../../context/AuthContext"
 
 function LoginForm() {
     const navigate = useNavigate()
-    const { login, error: authError, loading } = useAuth()
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+    const { loading, error, login } = useContext(AuthContext)
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -43,7 +43,7 @@ function LoginForm() {
                 {loading ? "Logging in..." : "Login"}
             </button>
 
-            {authError && <p style={{ color: "red" }}>{authError}</p>}
+            {error && <p style={{ color: "red" }}>{error}</p>}
         </form>
     )
 }
