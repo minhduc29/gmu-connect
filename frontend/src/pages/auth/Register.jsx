@@ -1,13 +1,11 @@
-import { useEffect } from "react"
+import { useEffect, useContext } from "react"
+import { AuthContext } from "../../context/AuthContext"
 import RegisterForm from "../../components/auth/RegisterForm"
-import useAuth from "../../hooks/useAuth"
 
 function Register() {
-    const { logout } = useAuth()
+    const { logout } = useContext(AuthContext)
 
-    useEffect(() => {
-        logout()
-    }, [])
+    useEffect(() => logout(), [])
     
     return <RegisterForm />
 }
