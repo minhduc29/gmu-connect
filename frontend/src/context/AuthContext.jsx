@@ -1,21 +1,20 @@
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, createContext } from "react"
 import authService from "../services/authService"
 
-function useAuth() {
+const AuthContext = createContext(null)
+
+function AuthProvider({ children }) {
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState("")
 
-    // Check authentication status on mount
     useEffect(() => {
-        authService.isAuthenticated().then(isAuth => {
-            setIsAuthenticated(isAuth)
-        }).finally(() => {
-            setLoading(false)
-        })
+        authService.isAuthenticated().then(result => {
+            setIsAuthenticated(result)
+        }).finally(() => setLoading(false))
     }, [])
 
-    const login = useCallback(async (username, password) => {
+    const login = async (username, password) => {
         setLoading(true)
 
         try {
@@ -26,9 +25,10 @@ function useAuth() {
         } finally {
             setLoading(false)
         }
-    }, [])
+    }
 
-    const register = useCallback(async (username, email, password, confirm_password) => {
+
+    const register = async (username, email, password, confirm_password) => {
         setLoading(true)
 
         try {
@@ -38,21 +38,18 @@ function useAuth() {
         } finally {
             setLoading(false)
         }
-    }, [])
+    }
 
-    const logout = useCallback(() => {
+    const logout = () => {
         authService.logout()
         setIsAuthenticated(false)
-    }, [])
-
-    return {
-        isAuthenticated,
-        loading,
-        error,
-        login,
-        register,
-        logout
     }
+
+    return (
+        <AuthContext.Provider value={{ isAuthenticated, loading, error, login, register, logout }}>
+            {children}
+        </AuthContext.Provider>
+    )
 }
 
-export default useAuth
+export { AuthContext, AuthProvider }
