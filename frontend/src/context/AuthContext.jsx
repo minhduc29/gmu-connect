@@ -1,5 +1,7 @@
 import { useState, useEffect, createContext } from "react"
+import { USERNAME, PROFILE, TAGS } from "../constants"
 import authService from "../services/authService"
+import profileService from "../services/profileService"
 
 const AuthContext = createContext(null)
 
@@ -9,10 +11,21 @@ function AuthProvider({ children }) {
     const [error, setError] = useState("")
 
     useEffect(() => {
-        authService.isAuthenticated().then(result => {
-            setIsAuthenticated(result)
+        authService.isAuthenticated().then(auth => {
+            setIsAuthenticated(auth)
+
+            if (auth) {
+                // Preload user profile to local storage
+                const username = localStorage.getItem(USERNAME)
+                const profile = localStorage.getItem(PROFILE) || ""
+                if (!profile) profileService.getProfile(username)
+
+                // Preload all tags since they don't change
+                const tags = localStorage.getItem(TAGS) || ""
+                if (!tags) profileService.getTags()
+            }
         }).finally(() => setLoading(false))
-    }, [])
+    }, [isAuthenticated])
 
     const login = async (username, password) => {
         setLoading(true)
