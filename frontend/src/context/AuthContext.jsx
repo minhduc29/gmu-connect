@@ -30,6 +30,8 @@ function AuthProvider({ children }) {
     const login = async (username, password) => {
         setLoading(true)
 
+        logout()
+        
         try {
             const result = await authService.login(username, password)
             setIsAuthenticated(result.success)
