@@ -1,7 +1,8 @@
-import React from "react"
-import { useState, useMemo } from "react"
+import { useState, useMemo, memo, useRef } from "react"
+import { TAGS } from "../../constants"
 
-function ProfileEditForm({ profile, tags, onSubmit, onCancel }) {
+function ProfileEditForm({ profile, onSubmit, onCancel }) {
+    const tags = useRef(JSON.parse(localStorage.getItem(TAGS)) || [])
     const [formData, setFormData] = useState({
         bio: profile.bio || "",
         major: profile.major || "",
@@ -35,7 +36,7 @@ function ProfileEditForm({ profile, tags, onSubmit, onCancel }) {
                 <input className="form-input" type="number" name="graduation_year" value={formData.graduation_year} onChange={handleChange} placeholder="Graduation Year" />
                 <label htmlFor="interests">Select Interests</label>
                 <select id="interests" multiple value={formData.interests} onChange={handleTagChange}>
-                    {tags.map(tag => <option key={tag.slug} value={tag.slug}>{tag.name}</option>)}
+                    {tags.current.map(tag => <option key={tag.slug} value={tag.slug}>{tag.name}</option>)}
                 </select>
                 <input className="form-input" type="url" name="linkedin" value={formData.linkedin} onChange={handleChange} placeholder="LinkedIn URL" />
                 <div className="form-buttons">
@@ -47,5 +48,5 @@ function ProfileEditForm({ profile, tags, onSubmit, onCancel }) {
     )
 }
 
-const MemoizedProfileEditForm = React.memo(ProfileEditForm)
+const MemoizedProfileEditForm = memo(ProfileEditForm)
 export default MemoizedProfileEditForm
