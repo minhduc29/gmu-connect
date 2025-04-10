@@ -1,0 +1,73 @@
+/* 1. Header (Top Bar) */
+.header {
+    background-color: #004C3F;
+    height: 50px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 20px;
+    color: #F1F5F9;
+    font-family: sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  /* 2. Sidebar Divider */
+  .sidebar-divider {
+    width: 1px;
+    background-color: black;
+    height: calc(100vh - 50px);
+    margin-left: 80px;
+  }
+  
+  /* 3. Error Message Content */
+  .error-container {
+    flex-grow: 1;
+    background-color: #FEE8A9;
+    display: flex;
+    flex-direction: column; /* enables stacking of error text and optional button */
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 50px); /* below the header */
+    font-family: monospace;
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+    animation: pulse 1.5s infinite;
+  }
+  
+  /* Optional: Back to Home Button */
+  .back-home-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #004C3F;
+    color: #F1F5F9;
+    border: none;
+    border-radius: 4px;
+    font-family: sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  /* Animation for a subtle pulse effect */
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 0.7;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  /* Main container */
+  .main {
+    display: flex;
+  }
+  

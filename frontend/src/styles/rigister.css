@@ -1,0 +1,110 @@
+/* Container */
+.card {
+    background-color: #FEE8A9;
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+  }
+  
+  /* Left Side Logo */
+  .logo {
+    width: 150px;
+    height: 150px;
+    background-color: #004C3F;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  /* Form Container */
+  .form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 10px; /* Added to adjust vertical alignment */
+  }
+  
+  /* Text Heading */
+  .form h1 {
+    font-family: sans-serif;
+    font-size: 28px;
+    font-weight: bold;
+    color: #000;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  /* Input Fields */
+  .form input {
+    width: 300px;
+    padding: 8px 12px;
+    border: none;
+    background-color: #065F46;
+    color: #D1D5DB;
+    font-family: monospace;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .form input::placeholder {
+    color: #A1A1AA;
+  }
+  
+  /* Textarea Field */
+  .form textarea {
+    width: 300px;
+    height: 120px;
+    padding: 8px 12px;
+    border: none;
+    background-color: #065F46;
+    color: #D1D5DB;
+    font-family: monospace;
+    font-size: 14px; /* Increased font size for better visual consistency */
+    border-radius: 8px;
+    margin-bottom: 16px;
+    resize: none;
+  }
+  
+  .form textarea::placeholder {
+    color: #A1A1AA;
+  }
+  
+  /* Create Button */
+  .form button {
+    align-self: flex-end;
+    font-family: monospace, sans-serif;
+    font-size: 12px;
+    padding: 6px 12px;
+    color: #fff;
+    background-color: #004C3F;
+    border: none;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth transition on hover */
+  }
+  
+  .form button:hover {
+    background-color: #003d36;
+  }
+  
+  /* Responsive Design for Mobile */
+  @media (max-width: 768px) {
+    .card {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .form {
+      align-items: center;
+    }
+  
+    .form input,
+    .form textarea {
+      width: 100%;
+    }
+  }
+  

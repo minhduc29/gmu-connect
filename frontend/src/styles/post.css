@@ -1,0 +1,83 @@
+/* 1. Header (Top Navigation Bar) */
+.header {
+    background-color: #004C3F;
+    height: 50px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 20px;
+    color: #F1F5F9;
+    font-family: sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  /* 2. Sidebar Vertical Divider */
+  .sidebar-divider {
+    width: 1px;
+    background-color: #000;
+    height: calc(100vh - 50px); /* Full height minus header */
+    margin-left: 80px;
+  }
+  
+  /* 3. Post Content Area Container */
+  .post-container {
+    position: relative;
+    background-color: #FEE8A9;
+    flex-grow: 1;
+    padding-top: 20px;
+    height: calc(100vh - 50px);
+  }
+  
+  /* Back Link */
+  .back-link {
+    font-family: monospace;
+    font-size: 12px;
+    margin: 20px;
+    cursor: pointer;
+  }
+  
+  /* Title of the Post */
+  .post-title {
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    margin: 20px 20px 10px;
+    text-align: left;
+  }
+  
+  /* Description Text */
+  .post-description {
+    font-family: monospace;
+    font-size: 14px;
+    margin: 0 20px 20px;
+    white-space: pre-wrap;
+  }
+  
+  /* Tags */
+  .tag {
+    font-family: monospace;
+    background-color: #ccc;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin: 10px 5px 0 20px;
+    display: inline-block;
+  }
+  
+  /* Timestamp positioned at top-right inside post-container */
+  .timestamp {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 12px;
+  }
+  
+  /* Main container holding the sidebar divider and post content */
+  .main {
+    display: flex;
+    height: calc(100vh - 50px); /* Full screen height minus header */
+  }
+  

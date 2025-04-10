@@ -1,0 +1,68 @@
+/* Header (Top Bar) */
+.header {
+    background-color: #004C3F;
+    height: 50px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 20px;
+    color: #F1F5F9;
+    font-family: sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  /* Sidebar (Left Vertical Navigation) */
+  .sidebar {
+    width: 80px;
+    background-color: #FEE8A9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 10px;
+    gap: 10px;
+    border-right: 1px solid #000;
+  }
+  
+  .sidebar-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  /* Sidebar buttons */
+  .sidebar button {
+    font-family: monospace, sans-serif;
+    font-size: 12px;
+    padding: 6px 12px;
+    background-color: #fff;
+    border: 1px solid #000;
+    border-radius: 12px;
+    cursor: pointer;
+  }
+  
+  /* Main container */
+  .main {
+    display: flex;
+    height: calc(100vh - 50px); /* Fullscreen height minus header */
+  }
+  
+  /* Content Area (Cards/Grid) */
+  .content {
+    flex-grow: 1;
+    background-color: #FEE8A9;
+    padding: 20px;
+    display: flex;
+    gap: 20px;
+  }
+  
+  .card {
+    width: 120px;
+    height: 120px;
+    background-color: #fff;
+    border: 1px solid #333;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
