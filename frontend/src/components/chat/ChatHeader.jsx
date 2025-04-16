@@ -3,13 +3,11 @@ function ChatHeader({ room, onLeave, onToggleMembers }) {
 
     return (
         <div className="chat-header">
-            <h2 className="chat-title">{room.display_name}</h2>
-            <button className="member-toggle" onClick={onToggleMembers} title="Show members">
-            👥 {room.members?.length || 0}
-          </button>
-            <button className="leave-button" onClick={() => onLeave(room.id)}>
-                Leave
-            </button>
+            <h1 className="green">{room.display_name}</h1>
+            <div className="header-actions">
+                <button className="chat-button green-button" onClick={onToggleMembers}>Members</button>
+                <button className="chat-button red-button" onClick={() => onLeave(room.id)}>Leave</button>
+            </div>
         </div>
     )
 }
