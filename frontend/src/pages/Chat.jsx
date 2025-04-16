@@ -4,6 +4,7 @@ import chatService from '../services/chatService'
 import createWebSocketConnection from '../services/websocketService'
 import ChatHeader from '../components/chat/ChatHeader'
 import ChatSidebar from '../components/chat/ChatSidebar'
+import MemberList from '../components/chat/MemberList'
 import MessageList from '../components/chat/MessageList'
 import MessageInput from '../components/chat/MessageInput'
 
@@ -23,19 +24,23 @@ function Chat() {
                 const result = await chatService.getRooms()
                 if (result.success) setRooms(result.data)
                 else setError(result.error)
+                console.log(result.data);
+
             } finally {
                 setLoading(false)
             }
         }
 
         fetchRooms()
+    }, [])
 
+    useEffect(() => {
         const handleWebSocketMessage = (data) => {
             switch (data.type) {
                 case 'new_message':
                     // Add new message to the messages list if it's for the active room
                     if (activeRoom && data.room_id === activeRoom.id) {
-                        setMessages(prevMessages => [data, ...prevMessages])
+                        setMessages(prevMessages => [...prevMessages, data])
                     }
 
                     // Update room list to show unread status
@@ -83,15 +88,18 @@ function Chat() {
         socketRef.current = socket
 
         return () => socketRef.current?.close()
-    }, [])
+    }, [activeRoom])
 
     const handleRoomSelect = async (room) => {
         setLoading(true)
-        setActiveRoom(room)
         try {
             const result = await chatService.getMessages(room.id)
-            if (result.success) setMessages(result.data.results)
-            else setError(result.error)
+            // TODO: next page handling
+            if (result.success) {
+                setMessages(result.data.results.reverse())
+                setRooms(prevRooms => prevRooms.map(r => r.id === room.id ? { ...r, unread: false } : r))
+                setActiveRoom(room)
+            } else setError(result.error)
         } finally {
             setLoading(false)
         }
@@ -101,11 +109,10 @@ function Chat() {
 
     const toggleMembers = () => setShowMembers(!showMembers)
 
-    const handleSendMessage = async (content) => {
+    const handleSendMessage = (content) => {
         if (!activeRoom || !content.trim()) return
         try {
-            socketRef.current?.sendMessage(activeRoom.id, content)
-            await chatService.sendMessage(activeRoom.id, content)
+            socketRef.current.sendMessage(activeRoom.id, content.trim())
         } catch (err) {
             setError('Failed to send message')
         }
@@ -113,27 +120,40 @@ function Chat() {
 
     const loadMoreMessages = async () => {
         if (!activeRoom) return
-        const result = await chatService.getMessages(activeRoom.id)
-        if (result.success) setMessages(prev => [...result.data.results, ...prev])
+        const result = await chatService.getMessages(activeRoom.id, nextPage)
+        if (result.success) setMessages(prev => [...result.data.results.reverse(), ...prev])
+        // TODO: next page handling
+    }
+
+    const handleAddMember = (usernames) => {
+        if (!activeRoom || !usernames.length) return
+        chatService.manageMembers(activeRoom.id, 'add', usernames)
+    }
+
+    const handleRemoveMember = (usernames) => {
+        if (!activeRoom || !usernames.length) return
+        chatService.manageMembers(activeRoom.id, 'remove', usernames)
     }
 
     return (
         <div className="chat-page">
-            <ChatSidebar
-                rooms={rooms}
-                activeRoomId={activeRoom?.id}
-                onSelectRoom={handleRoomSelect}
-            />
+            {showMembers ? (
+                <MemberList room={activeRoom} onAdd={handleAddMember} onRemove={handleRemoveMember} />
+            ) : (
+                <ChatSidebar rooms={rooms} activeRoomId={activeRoom?.id} onSelectRoom={handleRoomSelect} />
+            )}
 
             <div className="chat-container">
-                <ChatHeader room={activeRoom} onLeave={handleRoomLeave} onToggleMembers={toggleMembers} />
-                <MessageList messages={messages} onLoadMore={loadMoreMessages} />
-                <MessageInput onSend={handleSendMessage} />
-                {showMembers && (
-                    <div className="member-list-panel">
-                        {/* TODO: MemberList will go here */}
-                    </div>
+                {activeRoom ? (
+                    <>
+                        <ChatHeader room={activeRoom} onLeave={handleRoomLeave} onToggleMembers={toggleMembers} />
+                        <MessageList messages={messages} onLoadMore={loadMoreMessages} />
+                        <MessageInput onSend={handleSendMessage} />
+                    </>
+                ) : (
+                    <p className="green" style={{ fontSize: "20px" }}>No chat room selected</p>
                 )}
+
             </div>
         </div>
     )
