@@ -1,7 +1,8 @@
-function ChatSidebar({ rooms, activeRoomId, onSelectRoom }) {
+function ChatSidebar({ rooms, activeRoomId, onSelectRoom, onToggleCreate }) {
     return (
         <div className="chat-sidebar">
             <h1 className="green">Chat</h1>
+            <button className="free-button green-button" onClick={onToggleCreate}>Create New Chat</button>
             <div className="room-list scroll-hidden">
                 {rooms.map(room => (
                     <div
