@@ -98,7 +98,6 @@
   align-items: center;
   justify-content: space-evenly;
   height: 100%;
-  width: 20%;
 }
 
 .red-button {
@@ -120,6 +119,18 @@
   transition: background-color 0.3s ease;
   height: 40px;
   width: 70px;
+  padding: 10px;
+}
+
+.free-button {
+  margin: 10px;
+  border-radius: 7px;
+  font-family: 'Patrick Hand';
+  font-size: 15px;
+  color: #F1F5F9;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
   padding: 10px;
 }
 
