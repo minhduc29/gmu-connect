@@ -4,7 +4,6 @@ import { USERNAME } from '../../constants'
 
 function MemberList({ room, onAdd, onRemove }) {
     const [content, setContent] = useState('')
-    const admin = useRef(room.admin?.username)
     const username = useRef(localStorage.getItem(USERNAME))
 
     const handleSubmit = (e) => {
@@ -35,9 +34,9 @@ function MemberList({ room, onAdd, onRemove }) {
                     <div key={i} className="member-item">
                         <Link to={`/profiles/${member.user.username}`} className="member-name">
                             <span>{member.user.username} </span>
-                            <span className="role">{admin.current === member.user.username && '(Admin)'}</span>
+                            <span className="role">{room.admin?.username === member.user.username && '(Admin)'}</span>
                         </Link>
-                        {room.is_group && member.user.username !== username.current && member.user.username !== admin.current && <button className="remove-button red-button" onClick={() => onRemove([member.user.username])}>X</button>}
+                        {room.is_group && member.user.username !== username.current && member.user.username !== room.admin?.username && <button className="remove-button red-button" onClick={() => onRemove([member.user.username])}>X</button>}
                     </div>
                 ))}
             </div>

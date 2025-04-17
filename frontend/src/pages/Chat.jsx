@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react'
 import { ACCESS_TOKEN } from '../constants'
 import chatService from '../services/chatService'
 import createWebSocketConnection from '../services/websocketService'
+import ChatCreateForm from '../components/chat/ChatCreateForm'
 import ChatHeader from '../components/chat/ChatHeader'
 import ChatSidebar from '../components/chat/ChatSidebar'
 import MemberList from '../components/chat/MemberList'
@@ -14,6 +15,7 @@ function Chat() {
     const [messages, setMessages] = useState([])
     const [nextPage, setNextPage] = useState('')
     const [showMembers, setShowMembers] = useState(false)
+    const [createRoom, setCreateRoom] = useState(false)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
     const socketRef = useRef(null)
@@ -24,8 +26,6 @@ function Chat() {
                 const result = await chatService.getRooms()
                 if (result.success) setRooms(result.data)
                 else setError(result.error)
-                console.log(result.data);
-
             } finally {
                 setLoading(false)
             }
@@ -135,12 +135,25 @@ function Chat() {
         chatService.manageMembers(activeRoom.id, 'remove', usernames)
     }
 
+    const toggleCreateRoom = () => setCreateRoom(!createRoom)
+
+    const handleCreateRoom = (roomData) => {
+        chatService.createRoom(roomData)
+        setCreateRoom(false)
+    }
+
+    const handleCancel = () => setCreateRoom(false)
+
     return (
         <div className="chat-page">
             {showMembers ? (
                 <MemberList room={activeRoom} onAdd={handleAddMember} onRemove={handleRemoveMember} />
             ) : (
-                <ChatSidebar rooms={rooms} activeRoomId={activeRoom?.id} onSelectRoom={handleRoomSelect} />
+                createRoom ? (
+                    <ChatCreateForm onSubmit={handleCreateRoom} onCancel={handleCancel}></ChatCreateForm>
+                ) : (
+                    <ChatSidebar rooms={rooms} activeRoomId={activeRoom?.id} onSelectRoom={handleRoomSelect} onToggleCreate={toggleCreateRoom} />
+                )
             )}
 
             <div className="chat-container">
