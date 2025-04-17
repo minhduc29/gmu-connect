@@ -13,14 +13,15 @@ function MessageInput({ onSend }) {
 
   return (
     <form className="message-input" onSubmit={handleSubmit}>
-      <input
+      <textarea
         type="text"
         value={content}
         onChange={(e) => setContent(e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && handleSubmit(e)}
         placeholder="Type a message..."
-        className="message-textbox"
+        className="form-input scroll-hidden"
       />
-      <button type="submit" className="send-button">Send</button>
+      <button type="submit" className="chat-button green-button">Send</button>
     </form>
   )
 }
