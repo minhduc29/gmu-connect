@@ -60,15 +60,16 @@ function Chat() {
 
                 case 'added_to_room':
                     // Add the new room to the list
-                    setRooms(prevRooms => prevRooms.some(room => room.id === data.data.id) ? prevRooms : [...prevRooms, data.data])
+                    setRooms(prevRooms => prevRooms.some(room => room.id === data.data.id) ? prevRooms : [data.data, ...prevRooms])
                     break
 
                 case 'removed_from_room':
                     // Remove the room from the list
-                    setRooms(prevRooms => prevRooms.filter(room => room.id !== data.data.id))
-                    if (data.data.id === activeRoom?.id) {
+                    setRooms(prevRooms => prevRooms.filter(room => room.id !== data.data))
+                    if (data.data === activeRoom?.id) {
                         setActiveRoom(null)
                         setMessages([])
+                        setShowMembers(false)
                     }
                     break
 
@@ -146,7 +147,7 @@ function Chat() {
 
     return (
         <div className="chat-page">
-            {showMembers ? (
+            {activeRoom && showMembers ? (
                 <MemberList room={activeRoom} onAdd={handleAddMember} onRemove={handleRemoveMember} />
             ) : (
                 createRoom ? (
