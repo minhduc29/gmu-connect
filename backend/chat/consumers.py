@@ -172,7 +172,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'type': 'member_added',
             'room_id': event['room_id'],
-            'data': event['data'] # List of usernames added
+            'data': event['data']
         }))
     
     async def member_removed(self, event):
@@ -180,7 +180,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'type': 'member_removed',
             'room_id': event['room_id'],
-            'data': event['data'], # List of usernames removed
+            'data': event['data'],
             'left': event.get('left', False) # For distinguishing between leaving and being kicked
         }))
     
