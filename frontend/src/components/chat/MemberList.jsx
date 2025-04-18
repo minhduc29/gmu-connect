@@ -17,7 +17,7 @@ function MemberList({ room, onAdd, onRemove }) {
     return (
         <div className="chat-sidebar">
             <h1 className="green">Members</h1>
-            {room.is_group &&
+            {room.is_group && username.current === room.admin?.username &&
                 <form className="message-input" onSubmit={handleSubmit}>
                     <input
                         type="text"
@@ -30,13 +30,13 @@ function MemberList({ room, onAdd, onRemove }) {
                 </form>
             }
             <div className="room-list scroll-hidden">
-                {room.members.map((member, i) => (
+                {room.members?.map((member, i) => (
                     <div key={i} className="member-item">
                         <Link to={`/profiles/${member.user.username}`} className="member-name">
                             <span>{member.user.username} </span>
                             <span className="role">{room.admin?.username === member.user.username && '(Admin)'}</span>
                         </Link>
-                        {room.is_group && member.user.username !== username.current && member.user.username !== room.admin?.username && <button className="remove-button red-button" onClick={() => onRemove([member.user.username])}>X</button>}
+                        {room.is_group && username.current === room.admin?.username && member.user.username !== username.current && member.user.username !== room.admin?.username && <button className="remove-button red-button" onClick={() => onRemove([member.user.username])}>X</button>}
                     </div>
                 ))}
             </div>
