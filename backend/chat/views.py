@@ -6,7 +6,6 @@ from rest_framework import generics, views, status
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
-from users.serializers import UserSerializer
 from .consumers import ChatConsumer
 from .models import Room, RoomMember, Message
 from .serializers import RoomSerializer, MessageSerializer
@@ -140,17 +139,6 @@ class RoomView(views.APIView):
 
         serializer = RoomSerializer(room)
 
-        # Notify all room members about the change
-        ChatConsumer.notify(
-            group_id=pk,
-            event_type='member_added' if action == 'add' else 'member_removed',
-            event_data={
-                "room_id": pk,
-                "data": usernames
-            },
-            is_room=True
-        )
-
         # Notify all added/removed users
         if action == "add":
             event_type = "added_to_room"
@@ -169,6 +157,17 @@ class RoomView(views.APIView):
                 },
                 is_room=False
             )
+
+        # Notify all room members about the change
+        ChatConsumer.notify(
+            group_id=pk,
+            event_type='member_added' if action == 'add' else 'member_removed',
+            event_data={
+                "room_id": pk,
+                "data": serializer.data
+            },
+            is_room=True
+        )
 
         return Response(serializer.data)
 
@@ -195,18 +194,6 @@ class LeaveRoomView(generics.DestroyAPIView):
         # Delete the membership
         room_member.delete()
 
-        # Notify all room members about the user leaving
-        ChatConsumer.notify(
-            group_id=room.id,
-            event_type='member_removed',
-            event_data={
-                'room_id': room.id,
-                'data': [request.user.username],
-                'left': True
-            },
-            is_room=True
-        )
-
         # Notify the user who left and disconnect them
         ChatConsumer.notify(
             group_id=request.user.id,
@@ -217,6 +204,18 @@ class LeaveRoomView(generics.DestroyAPIView):
                 'left': True
             },
             is_room=False
+        )
+
+        # Notify all room members about the user leaving
+        ChatConsumer.notify(
+            group_id=room.id,
+            event_type='member_removed',
+            event_data={
+                'room_id': room.id,
+                'data': RoomSerializer(room).data,
+                'left': True
+            },
+            is_room=True
         )
 
         return Response(status=status.HTTP_204_NO_CONTENT)

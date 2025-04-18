@@ -145,4 +145,4 @@ class RoomSerializer(serializers.ModelSerializer):
         """Check if there are any unread messages"""
         user_last_read = getattr(obj, 'user_last_read', None)
         latest_message_time = getattr(obj, 'latest_message_time', None)
-        return latest_message_time > user_last_read if user_last_read and latest_message_time else True
+        return latest_message_time > user_last_read if user_last_read and latest_message_time else False
