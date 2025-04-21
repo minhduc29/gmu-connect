@@ -40,12 +40,11 @@ function ProfileCard({ author }) {
     }, [])
 
     return (
-        <div className="profile-card">
-            {error && <p style={{ color: "red" }}>{error}</p>}
+        <div className="form-bg">
             {isEditing ? (
                 <ProfileEditForm profile={profile} onSubmit={handleSubmit} onCancel={handleCancel} />
             ) : (
-                <ProfileView profile={profile} isCurrentUser={isCurrentUser} onEdit={handleEdit} />
+                <ProfileView profile={profile} isCurrentUser={isCurrentUser} onEdit={handleEdit} error={error} />
             )}
         </div>
     )
