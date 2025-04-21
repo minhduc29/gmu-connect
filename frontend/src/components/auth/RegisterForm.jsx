@@ -54,65 +54,69 @@ function RegisterForm() {
 
     if (isRegistered) {
         return (
-            <div className="form-container">
-                <h2>Registration Successful!</h2>
-                <p>Now please check your GMU email box for verification email</p>
+            <div className="form-bg">
+                <div className="form-container">
+                    <h2>Registration Successful!</h2>
+                    <p>Now please check your GMU email box for verification email</p>
+                </div>
             </div>
         )
     }
 
     return (
-        <form onSubmit={handleSubmit} className="form-container">
-            <h1>Register</h1>
+        <div className="form-bg">
+            <form onSubmit={handleSubmit} className="form-container">
+                <h1 className="green">Register</h1>
 
-            <input
-                type="text"
-                className="form-input"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Username"
-                required
-            />
+                <input
+                    type="text"
+                    className="form-input"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Username"
+                    required
+                />
 
-            <input
-                type="email"
-                className="form-input"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onBlur={handleEmailBlur}
-                placeholder="Email"
-                required
-            />
-            {emailError && <p style={{ color: "red" }}>{emailError}</p>}
+                <input
+                    type="email"
+                    className="form-input"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    onBlur={handleEmailBlur}
+                    placeholder="Email"
+                    required
+                />
+                {emailError && <p className="input-error" style={{ color: "red" }}>{emailError}</p>}
 
-            <input
-                type="password"
-                className="form-input"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onBlur={handlePasswordBlur}
-                placeholder="Password"
-                required
-            />
-            {passwordError && <p style={{ color: "red" }}>{passwordError}</p>}
+                <input
+                    type="password"
+                    className="form-input"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onBlur={handlePasswordBlur}
+                    placeholder="Password"
+                    required
+                />
+                {passwordError && <p className="input-error" style={{ color: "red" }}>{passwordError}</p>}
 
-            <input
-                type="password"
-                className="form-input"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                onBlur={handleConfirmPasswordBlur}
-                placeholder="Confirm Password"
-                required
-            />
-            {confirmPasswordError && <p style={{ color: "red" }}>{confirmPasswordError}</p>}
+                <input
+                    type="password"
+                    className="form-input"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    onBlur={handleConfirmPasswordBlur}
+                    placeholder="Confirm Password"
+                    required
+                />
+                {confirmPasswordError && <p className="input-error" style={{ color: "red" }}>{confirmPasswordError}</p>}
 
-            <button className="form-button" type="submit" disabled={loading}>
-                {loading ? "Registering..." : "Register"}
-            </button>
+                <button className="form-button" type="submit" disabled={loading}>
+                    {loading ? "Registering..." : "Register"}
+                </button>
 
-            {error && <p style={{ color: "red" }}>{error}</p>}
-        </form>
+                {error && <p className="input-error" style={{ color: "red" }}>{error}</p>}
+            </form>
+        </div>
     )
 }
 

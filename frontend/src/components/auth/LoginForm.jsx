@@ -18,33 +18,35 @@ function LoginForm() {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="form-container">
-            <h1>Login</h1>
+        <div className="form-bg">
+            <form onSubmit={handleSubmit} className="form-container">
+                <h1 className="green">Login</h1>
 
-            <input
-                type="text"
-                className="form-input"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Username"
-                required
-            />
+                <input
+                    type="text"
+                    className="form-input"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Username"
+                    required
+                />
 
-            <input
-                type="password"
-                className="form-input"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                required
-            />
+                <input
+                    type="password"
+                    className="form-input"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Password"
+                    required
+                />
 
-            <button className="form-button" type="submit" disabled={loading}>
-                {loading ? "Logging in..." : "Login"}
-            </button>
+                <button className="form-button" type="submit" disabled={loading}>
+                    {loading ? "Logging in..." : "Login"}
+                </button>
 
-            {error && <p style={{ color: "red" }}>{error}</p>}
-        </form>
+                {error && <p className="input-error" style={{ color: "red" }}>{error}</p>}
+            </form>
+        </div>
     )
 }
 
