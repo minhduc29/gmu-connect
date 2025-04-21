@@ -167,7 +167,6 @@ function Chat() {
                 ) : (
                     <p className="green" style={{ fontSize: "20px" }}>No chat room selected</p>
                 )}
-
             </div>
         </div>
     )
