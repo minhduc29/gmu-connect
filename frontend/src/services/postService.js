@@ -1,9 +1,9 @@
 import api from "./api"
 
 const postService = {
-    getAllPost: async () => {
+    getAllPosts: async (search="") => {
         try {
-            const response = await api.get(`/api/posts/`)
+            const response = await api.get(`/api/posts/?search=${search}`)
             return {
                 success: true,
                 data: response.data
@@ -16,7 +16,7 @@ const postService = {
         }
     },
 
-    getUserPost: async (username) => {
+    getUserPosts: async (username) => {
         try {
             const response = await api.get(`/api/posts/by/${username}/`)
             return {
@@ -26,14 +26,44 @@ const postService = {
         } catch (error) {
             return {
                 success: false,
-                error: Object.values(error.response.data)[0] || `Failed to get post for ${username}.`
+                error: Object.values(error.response.data)[0] || `Failed to get posts of ${username}.`
             }
         }
     },
 
-    updatePost: async (username, id, postData) => {
+    getPost: async (postId) => {
+        try {
+            const response = await api.get(`/api/posts/${postId}/`)
+            return {
+                success: true,
+                data: response.data
+            }
+        } catch (error) {
+            return {
+                success: false,
+                error: Object.values(error.response.data)[0] || `Failed to get post ${postId}.`
+            }
+        }
+    },
+
+    createPost: async (postData) => {
+        try {
+            const response = await api.post(`/api/posts/`, postData)
+            return {
+                success: true,
+                data: response.data
+            }
+        } catch (error) {
+            return {
+                success: false,
+                error: Object.values(error.response.data)[0] || `Failed to create post.`
+            }
+        }
+    },
+
+    updatePost: async (postId, postData) => {
         try{
-            const response = await api.put(`api/posts/by/${username}/${id}/`, postData)
+            const response = await api.put(`api/posts/${postId}/`, postData)
             return{
                 success: true,
                 data: response.data
@@ -41,10 +71,24 @@ const postService = {
         } catch (error){
             return {
                 success: false,
-                error: Object.values(error.response.data)[0] || `Failed to update post for ${username}.`
+                error: Object.values(error.response.data)[0] || `Failed to update post ${postId}.`
             }
         }
+    },
 
+    deletePost: async (postId) => {
+        try {
+            const response = await api.delete(`/api/posts/${postId}/`)
+            return {
+                success: true,
+                data: response.data
+            }
+        } catch (error) {
+            return {
+                success: false,
+                error: Object.values(error.response.data)[0] || `Failed to delete post ${postId}.`
+            }
+        }
     }
 }
 
