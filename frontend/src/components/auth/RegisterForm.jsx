@@ -56,8 +56,8 @@ function RegisterForm() {
         return (
             <div className="form-bg">
                 <div className="form-container">
-                    <h2>Registration Successful!</h2>
-                    <p>Now please check your GMU email box for verification email</p>
+                    <h2 className="green">Registration Successful!</h2>
+                    <p className="green">Now please check your GMU email box for verification email</p>
                 </div>
             </div>
         )
